@@ -1,33 +1,33 @@
 import os
-
 import cv2
 import numpy
 import pyautogui
-import time
+from win32api import GetSystemMetrics
 
 
 
 class VideoWr:
     def __init__(self):
-        self.SCREEN_SIZE = (1920, 1080)
+        self.screen_resolution = (GetSystemMetrics(0),GetSystemMetrics(1))
         self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.out = None
         self.run = False
 
     def run_recorder(self):
-        self.out = cv2.VideoWriter('output.mp4', self.fourcc, 12.0, self.SCREEN_SIZE)
+        if self.screen_resolution != (1920, 1080):
+            self.out = cv2.VideoWriter('output.mp4', self.fourcc, 20.0, (1920, 1080))
 
-        t = time.monotonic()
-        while self.run and (time.monotonic() - t < 120):
+        else:
+            self.out = cv2.VideoWriter('output.mp4', self.fourcc, 20.0, self.screen_resolution)
+
+
+        while self.run:
             img = pyautogui.screenshot()
             frame = numpy.array(img)
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             self.out.write(frame)
-            try:
-                if (os.stat('output.mp4').st_size // 100000) > 480:
-                    break
-            except Exception as e:
-                print(e)
+            if (os.stat('output.mp4').st_size // 100000) > 480:
+                break
 
         self.out.release()
 
