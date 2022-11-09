@@ -28,7 +28,8 @@ class TelegaBot:
                 self.bot.send_message(message.chat.id, 'Запись уже ведется')
             else:
                 self.recorder.run = True
-                self.bot.send_message(message.chat.id, 'Запись начата')
+                self.bot.send_message(message.chat.id, f'Запись начата \n'
+                                                       f'Разрешение экрана:{self.recorder.screen_resolution}')
                 self.recorder.run_recorder()
                 if self.recorder.run:
                     with open('output.mp4', 'rb') as video:
@@ -65,7 +66,6 @@ class TelegaBot:
             except Exception as error:
                 now = datetime.now()
                 self.error.update({now.strftime('%d.%m %H:%M:%S'): error.__repr__()})
-                print(self.error)
                 sleep(60)
 
     def run(self):

@@ -5,21 +5,18 @@ import pyautogui
 from win32api import GetSystemMetrics
 
 
-
 class VideoWr:
     def __init__(self):
-        self.screen_resolution = (GetSystemMetrics(0),GetSystemMetrics(1))
+        self.screen_resolution = (GetSystemMetrics(0), GetSystemMetrics(1))
         self.fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.out = None
         self.run = False
 
     def run_recorder(self):
-        if self.screen_resolution != (1920, 1080):
-            self.out = cv2.VideoWriter('output.mp4', self.fourcc, 20.0, (1920, 1080))
-
+        if self.screen_resolution:
+            self.out = cv2.VideoWriter('output.mp4', self.fourcc, 15.0, self.screen_resolution)
         else:
-            self.out = cv2.VideoWriter('output.mp4', self.fourcc, 20.0, self.screen_resolution)
-
+            self.out = cv2.VideoWriter('output.mp4', self.fourcc, 20.0, (1920, 1080))
 
         while self.run:
             img = pyautogui.screenshot()
