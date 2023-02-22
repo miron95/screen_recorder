@@ -6,15 +6,19 @@ from time import sleep
 import telebot
 
 from main import VideoWr
+from os import getenv
 
-tkn = '5438183724:AAH5oxlt1zZ9u1qRKE0TSWhtdpeQKiTdqH4'
+# Get Telegram token from env.
+# You need to add environment variable first or use "hardcode" style if you are going to run an .exe file.
+tkn = getenv('TG_TOKEN', 'token missing')
 
 
 # logger = telebot.logger
 # logger.setLevel(logging.DEBUG)
-# logger.info('1')
 class TelegaBot:
-
+    """
+    Class for using Telegram bot instances
+    """
     def __init__(self):
         self.token = tkn
         self.bot = telebot.TeleBot(self.token)
@@ -22,6 +26,9 @@ class TelegaBot:
         self.error = dict()
 
     def handler(self):
+        """
+        Main handler command
+        """
         @self.bot.message_handler(commands=['start'])
         def start(message: telebot.types.Message):
             if self.recorder.run:
@@ -36,7 +43,7 @@ class TelegaBot:
                         try:
                             self.bot.send_video(message.chat.id, video)
                         except Exception as error_send_video:
-                            self.bot.send_message('-869214948', 'Ошибка при отправке файла: ' + str(error_send_video))
+                            self.bot.send_message('489200160', 'Ошибка при отправке файла: ' + str(error_send_video))
                         self.recorder.run = False
                         video.close()
                     self.remove_file()
@@ -51,7 +58,7 @@ class TelegaBot:
                     try:
                         self.bot.send_video(message.chat.id, video)
                     except Exception as error_send_video:
-                        self.bot.send_message('-869214948', 'Ошибка при отправке файла: ' + str(error_send_video))
+                        self.bot.send_message('489200160', 'Ошибка при отправке файла: ' + str(error_send_video))
                     video.close()
                 self.remove_file()
             else:
@@ -60,7 +67,7 @@ class TelegaBot:
 
         while True:
             try:
-                self.bot.send_message('-869214948', 'Бот слушает команду..')
+                self.bot.send_message('489200160', 'Бот слушает команду..')
                 self.run()
 
             except Exception as error:
@@ -69,6 +76,10 @@ class TelegaBot:
                 sleep(60)
 
     def run(self):
+        """
+        Bot-running function
+        :return: None
+        """
         self.bot.polling(non_stop=True, skip_pending=True)
 
     def remove_file(self):
@@ -76,8 +87,8 @@ class TelegaBot:
         try:
             os.remove('output.mp4')
         except Exception as e:
-            self.bot.send_message('-869214948', 'Произошла ошибка при удалении файла:')
-            self.bot.send_message('-869214948', str(e))
+            self.bot.send_message('489200160', 'Произошла ошибка при удалении файла:')
+            self.bot.send_message('489200160', str(e))
 
 
 if __name__ == '__main__':
